@@ -336,6 +336,7 @@ if (EVHTP_BUILD_SHARED)
 endif()
 
 add_subdirectory(examples)
+add_subdirectory (test)
 
 if (NOT LIB_INSTALL_DIR)
   set (LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
@@ -489,5 +490,7 @@ if(WHOAMI_PROGRAM)
   )
 endif(WHOAMI_PROGRAM)
 INCLUDE(CPack)
+
+enable_testing()
 
 message("")
