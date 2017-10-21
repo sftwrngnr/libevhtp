@@ -190,19 +190,46 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-test/CMakeFiles/ehtp_test.dir/rule:
-	cd /home/dhenders/work/libevhtp && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/ehtp_test.dir/rule
-.PHONY : test/CMakeFiles/ehtp_test.dir/rule
+test/CMakeFiles/evhtp_test.dir/rule:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/evhtp_test.dir/rule
+.PHONY : test/CMakeFiles/evhtp_test.dir/rule
 
 # Convenience name for target.
-ehtp_test: test/CMakeFiles/ehtp_test.dir/rule
+evhtp_test: test/CMakeFiles/evhtp_test.dir/rule
 
-.PHONY : ehtp_test
+.PHONY : evhtp_test
 
 # fast build rule for target.
-ehtp_test/fast:
-	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/ehtp_test.dir/build.make test/CMakeFiles/ehtp_test.dir/build
-.PHONY : ehtp_test/fast
+evhtp_test/fast:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/evhtp_test.dir/build.make test/CMakeFiles/evhtp_test.dir/build
+.PHONY : evhtp_test/fast
+
+evhtp_test.o: evhtp_test.c.o
+
+.PHONY : evhtp_test.o
+
+# target to build an object file
+evhtp_test.c.o:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/evhtp_test.dir/build.make test/CMakeFiles/evhtp_test.dir/evhtp_test.c.o
+.PHONY : evhtp_test.c.o
+
+evhtp_test.i: evhtp_test.c.i
+
+.PHONY : evhtp_test.i
+
+# target to preprocess a source file
+evhtp_test.c.i:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/evhtp_test.dir/build.make test/CMakeFiles/evhtp_test.dir/evhtp_test.c.i
+.PHONY : evhtp_test.c.i
+
+evhtp_test.s: evhtp_test.c.s
+
+.PHONY : evhtp_test.s
+
+# target to generate assembly for a file
+evhtp_test.c.s:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/evhtp_test.dir/build.make test/CMakeFiles/evhtp_test.dir/evhtp_test.c.s
+.PHONY : evhtp_test.c.s
 
 # Help Target
 help:
@@ -214,12 +241,15 @@ help:
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... package"
-	@echo "... ehtp_test"
 	@echo "... package_source"
+	@echo "... evhtp_test"
 	@echo "... install/local"
 	@echo "... test"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... evhtp_test.o"
+	@echo "... evhtp_test.i"
+	@echo "... evhtp_test.s"
 .PHONY : help
 
 
