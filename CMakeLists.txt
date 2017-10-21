@@ -492,5 +492,6 @@ endif(WHOAMI_PROGRAM)
 INCLUDE(CPack)
 
 enable_testing()
+add_test(NAME evhtp_test COMMAND evhtp_test)
 
 message("")

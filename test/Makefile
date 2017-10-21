@@ -80,16 +80,15 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target package_source
-package_source:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /home/dhenders/work/libevhtp && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/dhenders/work/libevhtp/CPackSourceConfig.cmake
-.PHONY : package_source
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
 
-# Special rule for the target package_source
-package_source/fast: package_source
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
 
-.PHONY : package_source/fast
+.PHONY : list_install_components/fast
 
 # Special rule for the target package
 package: preinstall
@@ -101,6 +100,17 @@ package: preinstall
 package/fast: package
 
 .PHONY : package/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
+	cd /home/dhenders/work/libevhtp && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/dhenders/work/libevhtp/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+
+.PHONY : package_source/fast
 
 # Special rule for the target install/local
 install/local: preinstall
@@ -124,16 +134,6 @@ test:
 test/fast: test
 
 .PHONY : test/fast
-
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -189,6 +189,21 @@ depend:
 	cd /home/dhenders/work/libevhtp && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+test/CMakeFiles/ehtp_test.dir/rule:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/ehtp_test.dir/rule
+.PHONY : test/CMakeFiles/ehtp_test.dir/rule
+
+# Convenience name for target.
+ehtp_test: test/CMakeFiles/ehtp_test.dir/rule
+
+.PHONY : ehtp_test
+
+# fast build rule for target.
+ehtp_test/fast:
+	cd /home/dhenders/work/libevhtp && $(MAKE) -f test/CMakeFiles/ehtp_test.dir/build.make test/CMakeFiles/ehtp_test.dir/build
+.PHONY : ehtp_test/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,11 +212,12 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install"
-	@echo "... package_source"
+	@echo "... list_install_components"
 	@echo "... package"
+	@echo "... ehtp_test"
+	@echo "... package_source"
 	@echo "... install/local"
 	@echo "... test"
-	@echo "... list_install_components"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 .PHONY : help
