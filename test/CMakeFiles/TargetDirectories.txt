@@ -1,3 +1,0 @@
-/home/dhenders/work/libevhtp/tests/CMakeFiles/rebuild_cache.dir
-/home/dhenders/work/libevhtp/tests/CMakeFiles/test.dir
-/home/dhenders/work/libevhtp/tests/CMakeFiles/edit_cache.dir
