@@ -495,6 +495,6 @@ endif(WHOAMI_PROGRAM)
 INCLUDE(CPack)
 
 enable_testing()
-add_test(NAME evhtp_test COMMAND evhtp_test WORKING_DIRECTORY test ${UNIT_TEST_BIN_OUTPUT_DIR})
+add_subdirectory(test)
 
 message("")
