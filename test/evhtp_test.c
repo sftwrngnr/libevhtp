@@ -13,30 +13,76 @@
 #include <evhtp/evhtp.h>
 #include <testcasecalls.h>
 
+
 int testreturn(int rval)
 {
     printf("%s\n", RETVALS[rval]);
     return rval;
 }
 
-int test_evhtp_request_get_method(void)
+/* Dummy request_cb*/
+static void
+dummy_request_cb(evhtp_request_t * req, void * arg)
 {
-    htp_method myMethod;
-    evhtp_request_t *dummyrq;
-    myMethod = evhtp_request_get_method(dummyrq);
+    printf("dummy_request_cb %zu\n", evbuffer_get_length(req->buffer_in));
+}
+
+/* Create evhtp request with some meaningful data*/
+static void add_request_headers(evhtp_request_t *inreq)
+{
+       evhtp_headers_add_header(inreq->headers_out,
+               evhtp_header_new("Host", "byteme.com", 0, 0));
+    evhtp_headers_add_header(inreq->headers_out,
+                             evhtp_header_new("User-Agent", "libevhtp", 0, 0));
+    evhtp_headers_add_header(inreq->headers_out,
+                             evhtp_header_new("Connection", "close", 0, 0));
+}
+int test_evhtp_request_no_callbacks()
+{
+    evhtp_connection_t * conn = NULL;
+    evhtp_request_t *dummyrq = NULL;
+    evbase_t           * evbase = NULL;
+    int retval = 0;
+    
+    evbase  = event_base_new();
+    conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
+    dummyrq = evhtp_request_new(dummy_request_cb, evbase);
+    /* Should have callbacks to handle stuff*/
+    add_request_headers(dummyrq);
+     evhtp_make_request(conn, dummyrq, htp_method_GET, "/");
+     event_base_loop(evbase, 0);
+     event_base_free(evbase);
+     /* If we reached here, we've succeeded*/
+     retval = 1;
+     
+    return testreturn(retval);
 
 }
 
-int test_evhtp_connection_pause(void)
+int test_evhtp_request_with_callbacks(void)
 {
+    evhtp_connection_t * conn = NULL;
+    evhtp_request_t *dummyrq = NULL;
+    evbase_t           * evbase = NULL;
     int retval = 0;
     
-    return testreturn(retval);    
+    evbase  = event_base_new();
+    conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
+    dummyrq = evhtp_request_new(dummy_request_cb, evbase);
+    /* Add callbacks */
+    add_request_headers(dummyrq);
+     evhtp_make_request(conn, dummyrq, htp_method_GET, "/");
+     event_base_loop(evbase, 0);
+     event_base_free(evbase);
+     /* If we reached here, we've succeeded*/
+     retval = 1;
+     
+    return testreturn(retval);
 }
 
 tfuncs testfuncarray[] = {
-    {"test_evhtp_request_get_method", test_evhtp_request_get_method},
-    {"test_evhtp_connection_pause", test_evhtp_connection_pause},
+    {"test_evhtp_request_no_callbacks", test_evhtp_request_no_callbacks},
+    {"test_evhtp_request_with_callbacks", test_evhtp_request_with_callbacks},
     {NULL, NULL}
 };
 
