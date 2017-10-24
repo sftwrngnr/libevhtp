@@ -19,42 +19,24 @@ int testreturn(int rval)
     return rval;
 }
 
-int simple_test_htp__malloc_(void)
+int test_evhtp_request_get_method(void)
 {
-    char * mymem = NULL;
-    size_t allocsize = 2048;
-    int retval = 0; /* Set to success */
-    /*mymem = (char *) htp__malloc_(allocsize);*/
-    mymem = (char *) malloc(allocsize);
-    if (NULL != mymem)
-    {
-        retval = 1;
-        /*htp__free_((void *) mymem); */
-        free((void *) mymem);
-    }
-    return testreturn(retval);
+    htp_method myMethod;
+    evhtp_request_t *dummyrq;
+    myMethod = evhtp_request_get_method(dummyrq);
+
 }
 
-int simple_test_htp__calloc_(void)
+int test_evhtp_connection_pause(void)
 {
-    void *mymem = NULL;
-    size_t allocsize = 1024;
-    size_t numblocks = 2;
     int retval = 0;
-    
-    mymem = calloc(numblocks, allocsize);
-    if (mymem != NULL)
-    {
-        retval = 0; /* Test fail mode */
-        free(mymem);
-    }
     
     return testreturn(retval);    
 }
 
 tfuncs testfuncarray[] = {
-    {"simple_test_htp__malloc_", simple_test_htp__malloc_},
-    {"simple_test_htp__calloc_", simple_test_htp__calloc_},
+    {"test_evhtp_request_get_method", test_evhtp_request_get_method},
+    {"test_evhtp_connection_pause", test_evhtp_connection_pause},
     {NULL, NULL}
 };
 
