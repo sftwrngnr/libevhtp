@@ -155,7 +155,6 @@ static void   (* free_)(void * d) = free;
 static void *
 htp__malloc_(size_t size)
 { 
-    printf("malloc_\n");
     return malloc_(size);
 }
 
@@ -168,7 +167,6 @@ htp__realloc_(void * ptr, size_t size)
 static void
 htp__free_(void * ptr)
 {
-    printf("fuck chocolate shakes\n");
     return free_(ptr);
 }
 
@@ -5368,8 +5366,7 @@ void *teststaticfuncptr_getter(char *funcname)
         myptr = sfuncarray;
         while (myptr->sfuncname != NULL)
         {
-            printf("%s\n", myptr->sfuncname);
-            if (strcmp(funcname, myptr->sfuncname) != 0)
+            if (strcmp(funcname, myptr->sfuncname) == 0)
             {
                 funcptr = myptr->sfuncptr;
                 return funcptr;
@@ -5378,6 +5375,6 @@ void *teststaticfuncptr_getter(char *funcname)
                 myptr++;
         }
     }
-    return funcptr;
+    return NULL; /* Couldn't find it */
 }
 #endif /* TEST_STATIC_FUNCS */

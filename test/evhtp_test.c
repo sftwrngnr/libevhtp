@@ -90,7 +90,6 @@ int test_evhtp_request_no_callbacks()
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
-    return testreturn(retval);
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
@@ -113,7 +112,6 @@ int test_evhtp_request_with_callbacks(void)
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
-    return testreturn(retval);
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
@@ -140,21 +138,16 @@ int test_evhtp_static_htp__malloc_(void)
         myMem = ((vptr_size_t_func *) myfuncptr)(100);
         if (NULL != myMem)
         {
-            printf("Success. Attempting to free.\n");
-            /* myfuncptr = teststaticfuncptr_getter("htp__free_"); */
-            /*
+            myfuncptr = teststaticfuncptr_getter("htp__free_");
             if (myfuncptr != NULL)
             {
-                printf("Just before funcptr memory free.\n");
                 ((vptr_simple_void_ptr *) myfuncptr)(myMem);
                 retval = 1;
             }
             else
             {
-                printf("Couldn't find free.\n");
                 free(myMem);
             }
-            */
         }
     }
     return testreturn(retval);
