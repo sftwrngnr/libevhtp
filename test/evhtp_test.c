@@ -90,8 +90,17 @@ int test_evhtp_request_no_callbacks()
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
+    struct timeval rdtimeout, wrtimeout;
+
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
+    memset(&rdtimeout, 0, sizeof(struct timeval));
+    memset(&wrtimeout, 0, sizeof(struct timeval));
+    rdtimeout.tv_sec = 10;
+    wrtimeout.tv_sec = 10;
+    evhtp_connection_set_timeouts(conn,
+                              &rdtimeout,
+                              &wrtimeout);
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
     /* Should have callbacks to handle stuff*/
     add_request_headers(dummyrq);
@@ -112,8 +121,19 @@ int test_evhtp_request_with_callbacks(void)
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
+    struct timeval rdtimeout, wrtimeout;
+
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
+    /* Set timeouts so that this doesn't take freakin forever*/
+    memset(&rdtimeout, 0, sizeof(struct timeval));
+    memset(&wrtimeout, 0, sizeof(struct timeval));
+    rdtimeout.tv_sec = 10;
+    wrtimeout.tv_sec = 10;
+    evhtp_connection_set_timeouts(conn,
+                              &rdtimeout,
+                              &wrtimeout);
+
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
     /* Add callbacks */
     add_request_callback_hooks(evbase, dummyrq);
