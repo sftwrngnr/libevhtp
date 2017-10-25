@@ -7,6 +7,7 @@
 /***************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <errno.h>
@@ -89,14 +90,14 @@ int test_evhtp_request_no_callbacks()
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
-    
+    return testreturn(retval);
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
     /* Should have callbacks to handle stuff*/
     add_request_headers(dummyrq);
      evhtp_make_request(conn, dummyrq, htp_method_GET, "/");
-     //event_base_loop(evbase, 0);
+     event_base_loop(evbase, 0);
      event_base_free(evbase);
      /* If we reached here, we've succeeded*/
      retval = 1;
@@ -112,7 +113,7 @@ int test_evhtp_request_with_callbacks(void)
     evhtp_request_t *dummyrq = NULL;
     evbase_t           * evbase = NULL;
     int retval = 0;
-    
+    return testreturn(retval);
     evbase  = event_base_new();
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
@@ -128,9 +129,41 @@ int test_evhtp_request_with_callbacks(void)
     return testreturn(retval);
 }
 
+int test_evhtp_static_htp__malloc_(void)
+{
+    void *myfuncptr = teststaticfuncptr_getter("htp__malloc_");
+    void *myMem = NULL;
+    int retval = 0;
+    
+    if (myfuncptr != NULL)
+    {
+        myMem = ((vptr_size_t_func *) myfuncptr)(100);
+        if (NULL != myMem)
+        {
+            printf("Success. Attempting to free.\n");
+            /* myfuncptr = teststaticfuncptr_getter("htp__free_"); */
+            /*
+            if (myfuncptr != NULL)
+            {
+                printf("Just before funcptr memory free.\n");
+                ((vptr_simple_void_ptr *) myfuncptr)(myMem);
+                retval = 1;
+            }
+            else
+            {
+                printf("Couldn't find free.\n");
+                free(myMem);
+            }
+            */
+        }
+    }
+    return testreturn(retval);
+}
+
 tfuncs testfuncarray[] = {
     {"test_evhtp_request_no_callbacks", test_evhtp_request_no_callbacks},
     {"test_evhtp_request_with_callbacks", test_evhtp_request_with_callbacks},
+    {"test_evhtp_static_htp__malloc_", test_evhtp_static_htp__malloc_},
     {NULL, NULL}
 };
 

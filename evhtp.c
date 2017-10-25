@@ -28,6 +28,9 @@
 
 #include "log.h"
 
+#define TEST_STATIC_FUNCS /* Move this out and make it build environment specified */
+
+
 /**
  * @brief structure containing a single callback and configuration
  *
@@ -151,7 +154,8 @@ static void   (* free_)(void * d) = free;
 
 static void *
 htp__malloc_(size_t size)
-{
+{ 
+    printf("malloc_\n");
     return malloc_(size);
 }
 
@@ -164,6 +168,7 @@ htp__realloc_(void * ptr, size_t size)
 static void
 htp__free_(void * ptr)
 {
+    printf("fuck chocolate shakes\n");
     return free_(ptr);
 }
 
@@ -5339,3 +5344,40 @@ evhtp_request_status(evhtp_request_t * r)
 {
     return htparser_get_status(r->conn->parser);
 }
+
+#ifdef TEST_STATIC_FUNCS
+typedef struct staticfuncs
+{
+    char *sfuncname;
+    void *sfuncptr;
+} sfuncs;
+
+sfuncs sfuncarray[] = {
+    {"htp__malloc_", htp__malloc_},
+    {"htp__realloc_", htp__realloc_},
+    {"htp__free_", htp__free_},
+    {NULL, NULL}
+};
+
+void *teststaticfuncptr_getter(char *funcname)
+{
+    sfuncs *myptr = NULL;
+    void *funcptr = NULL;
+    if (NULL != funcname)
+    {
+        myptr = sfuncarray;
+        while (myptr->sfuncname != NULL)
+        {
+            printf("%s\n", myptr->sfuncname);
+            if (strcmp(funcname, myptr->sfuncname) != 0)
+            {
+                funcptr = myptr->sfuncptr;
+                return funcptr;
+            }
+            else
+                myptr++;
+        }
+    }
+    return funcptr;
+}
+#endif /* TEST_STATIC_FUNCS */
