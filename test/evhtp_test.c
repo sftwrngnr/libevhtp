@@ -7,7 +7,12 @@
 /***************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <evhtp.h>
+
 
 #include <test_evhtp.h>
 #include <evhtp/evhtp.h>
@@ -25,6 +30,47 @@ static void
 dummy_request_cb(evhtp_request_t * req, void * arg)
 {
     printf("dummy_request_cb %zu\n", evbuffer_get_length(req->buffer_in));
+}
+
+static evhtp_res
+print_data(evhtp_request_t * req, evbuf_t * buf, void * arg)
+{
+    printf("Got %zu bytes\n", evbuffer_get_length(buf));
+
+    return EVHTP_RES_OK;
+}
+
+static evhtp_res
+print_new_chunk_len(evhtp_request_t * req, uint64_t len, void * arg)
+{
+    printf("started new chunk, %"  PRIu64 "bytes\n", len);
+
+    return EVHTP_RES_OK;
+}
+
+static evhtp_res
+print_chunk_complete(evhtp_request_t * req, void * arg)
+{
+    printf("ended a single chunk\n");
+
+    return EVHTP_RES_OK;
+}
+
+static evhtp_res
+print_chunks_complete(evhtp_request_t * req, void * arg)
+{
+    printf("all chunks read\n");
+
+    return EVHTP_RES_OK;
+}
+
+
+static void add_request_callback_hooks(evbase_t *evbase, evhtp_request_t * request)
+{
+    evhtp_request_set_hook(request, evhtp_hook_on_read, print_data, evbase);
+    evhtp_request_set_hook(request, evhtp_hook_on_new_chunk, print_new_chunk_len, NULL);
+    evhtp_request_set_hook(request, evhtp_hook_on_chunk_complete, print_chunk_complete, NULL);
+    evhtp_request_set_hook(request, evhtp_hook_on_chunks_complete, print_chunks_complete, NULL);
 }
 
 /* Create evhtp request with some meaningful data*/
@@ -50,7 +96,7 @@ int test_evhtp_request_no_callbacks()
     /* Should have callbacks to handle stuff*/
     add_request_headers(dummyrq);
      evhtp_make_request(conn, dummyrq, htp_method_GET, "/");
-     event_base_loop(evbase, 0);
+     //event_base_loop(evbase, 0);
      event_base_free(evbase);
      /* If we reached here, we've succeeded*/
      retval = 1;
@@ -58,6 +104,7 @@ int test_evhtp_request_no_callbacks()
     return testreturn(retval);
 
 }
+
 
 int test_evhtp_request_with_callbacks(void)
 {
@@ -70,6 +117,7 @@ int test_evhtp_request_with_callbacks(void)
     conn = evhtp_connection_new(evbase, CLIENT_TEST_IP_LH, CLIENT_TEST_PORT); /* Shouldn't be an active server */
     dummyrq = evhtp_request_new(dummy_request_cb, evbase);
     /* Add callbacks */
+    add_request_callback_hooks(evbase, dummyrq);
     add_request_headers(dummyrq);
      evhtp_make_request(conn, dummyrq, htp_method_GET, "/");
      event_base_loop(evbase, 0);
