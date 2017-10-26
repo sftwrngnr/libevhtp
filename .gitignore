@@ -10,3 +10,11 @@ build/*
 !build/.gitkeep
 cmake-build-debug
 .idea
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+Makefile
+Testing
+config.h
+*.pc
+tree.h

@@ -494,4 +494,7 @@ if(WHOAMI_PROGRAM)
 endif(WHOAMI_PROGRAM)
 INCLUDE(CPack)
 
+enable_testing()
+add_subdirectory(test)
+
 message("")
