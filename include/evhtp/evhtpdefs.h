@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-    #define EVHTP_VERSION           "1.2.12"
-#define EVHTP_VERSION_MAJOR     1
-#define EVHTP_VERSION_MINOR     2
-#define EVHTP_VERSION_PATCH     12
+#define EVHTP_VERSION           "2.0.0"
+#define EVHTP_VERSION_MAJOR     2
+#define EVHTP_VERSION_MINOR     0
+#define EVHTP_VERSION_PATCH     0
 
 #define evhtp_headers_iterator  evhtp_kvs_iterator
 

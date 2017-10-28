@@ -86,6 +86,11 @@ check_c_compiler_flag(-std=c99 EVHTP_HAS_C99)
 check_c_compiler_flag(-fsanitize=address EVHTP_HAS_SANITIZE_ADDRESS)
 check_c_compiler_flag(-fsanitize=leak EVHTP_HAS_SANITIZE_LEAK)
 
+# If you want to keep the intermediate output for generating a callgraph
+# uncomment the add_compile_options below.
+#add_compile_options(-fdump-rtl-expand)
+
+
 # NOTE in as of ubuntu 14, this is enabled by default, so if you see it fail
 # the check, don't freak out.
 check_c_compiler_flag(-fstack-protector-strong EVHTP_HAS_STACK_PROTECTOR)
