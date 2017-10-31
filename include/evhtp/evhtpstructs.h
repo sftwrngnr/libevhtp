@@ -238,4 +238,37 @@ struct evhtp_kv_s {
 
 TAILQ_HEAD(evhtp_kvs_s, evhtp_kv_s);
 
+/**
+ * @brief structure containing a single callback and configuration
+ *
+ * The definition structure which is used within the evhtp_callbacks_t
+ * structure. This holds information about what should execute for either
+ * a single or regex path.
+ *
+ * For example, if you registered a callback to be executed on a request
+ * for "/herp/derp", your defined callback will be executed.
+ *
+ * Optionally you can set callback-specific hooks just like per-connection
+ * hooks using the same rules.
+ *
+ */
+struct evhtp_callback_s {
+    evhtp_callback_type type;           /**< the type of callback (regex|path) */
+    evhtp_callback_cb   cb;             /**< the actual callback function */
+    void              * cbarg;          /**< user-defind arguments passed to the cb */
+    evhtp_hooks_t     * hooks;          /**< per-callback hooks */
+    size_t              len;
+
+    union {
+        char * path;
+        char * glob;
+#ifndef EVHTP_DISABLE_REGEX
+        regex_t * regex;
+#endif
+    } val;
+
+    TAILQ_ENTRY(evhtp_callback_s) next;
+};
+
+
 #endif /* evhtpstructs_h_ */

@@ -113,6 +113,13 @@ htp__strndup_(const char * str, size_t len)
 #define htp__free_(p)        free(p)
 #endif
 
+#ifndef TAILQ_FOREACH_SAFE
+#define TAILQ_FOREACH_SAFE(var, head, field, tvar)        \
+    for ((var) = TAILQ_FIRST((head));                     \
+         (var) && ((tvar) = TAILQ_NEXT((var), field), 1); \
+         (var) = (tvar))
+#endif
+
 void evhtp_callbacks_free(evhtp_callbacks_t * callbacks); /* TODO: Put this in a header. */
 
 void
