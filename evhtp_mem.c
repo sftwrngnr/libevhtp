@@ -11,6 +11,9 @@
 
 /* Include files*/
 #include <stdlib.h>
+#include <evhtp.h>
+#include <internal.h> /* Maybe change this to libevhtp_internal.h */
+#include <evhtp/evhtpdefs.h>
 #include <evhtp/evhtpstructs.h>
 #include <string.h>
 
@@ -113,12 +116,22 @@ htp__strndup_(const char * str, size_t len)
 #define htp__free_(p)        free(p)
 #endif
 
+TAILQ_ENTRY(evhtp_callback_s) next;
+
 #ifndef TAILQ_FOREACH_SAFE
 #define TAILQ_FOREACH_SAFE(var, head, field, tvar)        \
     for ((var) = TAILQ_FIRST((head));                     \
          (var) && ((tvar) = TAILQ_NEXT((var), field), 1); \
          (var) = (tvar))
 #endif
+
+static void
+htp__default_request_cb_(evhtp_request_t * request, void * arg)
+{
+    evhtp_headers_add_header(request->headers_out,
+                             evhtp_header_new("Content-Length", "0", 0, 0));
+    evhtp_send_reply(request, EVHTP_RES_NOTFOUND);
+}
 
 void evhtp_callbacks_free(evhtp_callbacks_t * callbacks); /* TODO: Put this in a header. */
 
@@ -320,6 +333,7 @@ void *test_static_evhtp_mem_getter(char *funcname) /* Avoid name collisions by e
                 myptr++;
         }
     }
-    return NULL; /* Couldn't find it */
+    return (void *) NULL; /* Couldn't find it */
 }
+
 #endif /* TEST_STATIC_FUNCS */

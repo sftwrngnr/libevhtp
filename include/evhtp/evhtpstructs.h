@@ -1,9 +1,17 @@
 #ifndef evhtpstructs_h_
 #define evhtpstructs_h_
 
+#include <stdint.h>
 
 struct evhtp_callback_s;
 struct evhtp_callbacks_s;
+
+#ifndef EVHTP_DISABLE_SSL
+#include <event2/bufferevent_ssl.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/rand.h>
+#endif
 
 #ifndef EVHTP_DISABLE_SSL
 typedef SSL_SESSION               evhtp_ssl_sess_t;

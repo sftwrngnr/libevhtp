@@ -2266,13 +2266,6 @@ end:
     return 0;
 }     /* htp__connection_accept_ */
 
-static void
-htp__default_request_cb_(evhtp_request_t * request, void * arg)
-{
-    evhtp_headers_add_header(request->headers_out,
-                             evhtp_header_new("Content-Length", "0", 0, 0));
-    evhtp_send_reply(request, EVHTP_RES_NOTFOUND);
-}
 
 static evhtp_connection_t *
 htp__connection_new_(evhtp_t * htp, evutil_socket_t sock, evhtp_type type)
