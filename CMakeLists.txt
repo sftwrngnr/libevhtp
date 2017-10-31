@@ -27,6 +27,8 @@ OPTION(EVHTP_USE_JEMALLOC      "Enable jemalloc allocator" OFF)
 OPTION(EVHTP_USE_TCMALLOC      "Enable tcmalloc allocator" OFF)
 
 OPTION(EVHTP_DEBUG "Enable verbose debug logging" OFF)
+# -DEVHTP_TEST_STATIC:STRING=ON
+OPTION(EVHTP_TEST_STATIC "Enable testing of static functions" OFF)
 
 # fun color stuff
 if(NOT WIN32)
@@ -113,6 +115,11 @@ endif()
 
 if (EVHTP_HAS_VISIBILITY_HIDDEN)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+endif()
+
+if (EVHTP_TEST_STATIC)
+    add_definitions(-DTEST_STATIC_FUNCS)
+    set (EVHTP_TEST_STATIC ON)
 endif()
 
 if (NOT HAVE_SYS_TREE)
@@ -286,6 +293,7 @@ endif(NOT ${LIBEVENT_OPENSSL_FOUND})
 
 set (LIBEVHTP_SOURCES
     evhtp.c
+    evhtp_mem.c
     numtoa.c
     parser.c)
 
@@ -423,6 +431,7 @@ message(STATUS "${BoldBlue}EVHTP_DISABLE_REGEX${ColourReset}      : ${BoldGreen}
 message(STATUS "${BoldBlue}EVHTP_BUILD_SHARED${ColourReset}       : ${BoldGreen} ${EVHTP_BUILD_SHARED}${ColourReset}")
 message(STATUS "${BoldBlue}EVHTP_USE_JEMALLOC${ColourReset}       : ${BoldGreen} ${EVHTP_USE_JEMALLOC}${ColourReset}")
 message(STATUS "${BoldBlue}EVHTP_USE_TCMALLOC${ColourReset}       : ${BoldGreen} ${EVHTP_USE_TCMALLOC}${ColourReset}")
+message(STATUS "${BoldBlue}EVHTP_TEST_STATIC${ColourReset}        : ${BoldGreen} ${EVHTP_TEST_STATIC}${ColourReset}")
 message("")
 message(STATUS "${Blue}CMAKE_BUILD_TYPE${ColourReset}         : " ${BoldRed}${CMAKE_BUILD_TYPE}${ColourReset})
 message(STATUS "${Blue}CMAKE_INSTALL_PREFIX${ColourReset}     : " ${BoldMagenta}${CMAKE_INSTALL_PREFIX}${ColourReset})

@@ -32,95 +32,12 @@
 #endif
 
 #include <evhtp/evhtpdefs.h>
+#include <evhtp/evhtpstructs.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct evhtp_defaults_s {
-    evhtp_callback_cb    cb;
-    evhtp_pre_accept_cb  pre_accept;
-    evhtp_post_accept_cb post_accept;
-    void               * cbarg;
-    void               * pre_accept_cbarg;
-    void               * post_accept_cbarg;
-};
-
-struct evhtp_alias_s {
-    char * alias;
-
-    TAILQ_ENTRY(evhtp_alias_s) next;
-};
-
-/**
- * @ingroup evhtp_core
- * @brief main structure containing all configuration information
- */
-struct evhtp_s {
-    evhtp_t  * parent;                  /**< only when this is a vhost */
-    evbase_t * evbase;                  /**< the initialized event_base */
-    evserv_t * server;                  /**< the libevent listener struct */
-    char     * server_name;             /**< the name included in Host: responses */
-    void     * arg;                     /**< user-defined evhtp_t specific arguments */
-    int        bev_flags;               /**< bufferevent flags to use on bufferevent_*_socket_new() */
-    uint64_t   max_body_size;
-    uint64_t   max_keepalive_requests;
-
-    #define EVHTP_FLAG_ENABLE_100_CONT     (1 << 1)
-    #define EVHTP_FLAG_ENABLE_REUSEPORT    (1 << 2)
-    #define EVHTP_FLAG_ENABLE_NODELAY      (1 << 3)
-    #define EVHTP_FLAG_ENABLE_DEFER_ACCEPT (1 << 4)
-    #define EVHTP_FLAG_DEFAULTS            EVHTP_FLAG_ENABLE_100_CONT
-    uint16_t flags;             /**< the base flags set for this context, see: EVHTP_FLAG_* */
-    uint16_t parser_flags;      /**< default query flags to alter 'strictness' (see EVHTP_PARSE_QUERY_FLAG_*) */
-
-#ifndef EVHTP_DISABLE_SSL
-    evhtp_ssl_ctx_t * ssl_ctx;  /**< if ssl enabled, this is the servers CTX */
-    evhtp_ssl_cfg_t * ssl_cfg;
-#endif
-
-#ifndef EVHTP_DISABLE_EVTHR
-    evthr_pool_t    * thr_pool; /**< connection threadpool */
-    pthread_mutex_t * lock;     /**< parent lock for add/del cbs in threads */
-
-    evhtp_thread_init_cb thread_init_cb;
-    evhtp_thread_exit_cb thread_exit_cb;
-
-    /* keep backwards compat because I'm dumb and didn't
-     * make these structs private
-     */
-    #define thread_init_cbarg thread_cbarg
-    void * thread_cbarg;
-#endif
-    evhtp_callbacks_t * callbacks;
-    evhtp_defaults_t    defaults;
-
-    struct timeval recv_timeo;
-    struct timeval send_timeo;
-
-    TAILQ_HEAD(, evhtp_alias_s) aliases;
-    TAILQ_HEAD(, evhtp_s) vhosts;
-    TAILQ_ENTRY(evhtp_s) next_vhost;
-};
-
-
-/**
- * @brief a generic key/value structure
- */
-struct evhtp_kv_s {
-    char * key;
-    char * val;
-
-    size_t klen;
-    size_t vlen;
-
-    char k_heaped; /**< set to 1 if the key can be free()'d */
-    char v_heaped; /**< set to 1 if the val can be free()'d */
-
-    TAILQ_ENTRY(evhtp_kv_s) next;
-};
-
-TAILQ_HEAD(evhtp_kvs_s, evhtp_kv_s);
 
 
 
