@@ -336,4 +336,30 @@ void *test_static_evhtp_mem_getter(char *funcname) /* Avoid name collisions by e
     return (void *) NULL; /* Couldn't find it */
 }
 
+void *htp__malloc(size_t size)
+{
+    return htp__malloc_(size);
+}
+
+void *htp__calloc(size_t nmemb, size_t size)
+{
+    return htp__calloc_(nmemb, size);
+}
+
+void htp__free(void *ptr)
+{
+    htp__free_(ptr);
+}
+
+char *htp__strndup(const char * str, size_t len)
+{
+    return htp__strndup_(str, len);
+}
+
+char *htp__strdup(const char *str)
+{
+    return htp__strdup_(str);
+}
+
+
 #endif /* TEST_STATIC_FUNCS */

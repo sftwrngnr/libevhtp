@@ -17,6 +17,7 @@
 
 #include <test_evhtp.h>
 #include <evhtp/evhtp.h>
+#include <evhtp/evhtp_mem.h>
 #include <testcasecalls.h>
 
 
@@ -109,7 +110,7 @@ int test_evhtp_request_no_callbacks()
      event_base_free(evbase);
      /* If we reached here, we've succeeded*/
      retval = 1;
-     
+
     return testreturn(retval);
 
 }
@@ -143,22 +144,23 @@ int test_evhtp_request_with_callbacks(void)
      event_base_free(evbase);
      /* If we reached here, we've succeeded*/
      retval = 1;
-     
+
     return testreturn(retval);
 }
 
 int test_evhtp_static_htp__malloc_(void)
 {
-    void *myfuncptr = teststaticfuncptr_getter("htp__malloc_");
+#ifdef TEST_STATIC_FUNCS
+    void *myfuncptr = test_static_evhtp_mem_getter("htp__malloc_");
     void *myMem = NULL;
     int retval = 0;
-    
+
     if (myfuncptr != NULL)
     {
         myMem = ((vptr_size_t_func *) myfuncptr)(100);
         if (NULL != myMem)
         {
-            myfuncptr = teststaticfuncptr_getter("htp__free_");
+            myfuncptr = test_static_evhtp_mem_getter("htp__free_");
             if (myfuncptr != NULL)
             {
                 ((vptr_simple_void_ptr *) myfuncptr)(myMem);
@@ -171,6 +173,9 @@ int test_evhtp_static_htp__malloc_(void)
         }
     }
     return testreturn(retval);
+#else
+    return testreturn(1);
+#endif /* TEST_STATIC_FUNCS */
 }
 
 tfuncs testfuncarray[] = {
@@ -198,7 +203,7 @@ int main(int argc, char ** argp)
         }
         nCount++;
     }
-    
+
     return nRetval; /* Dummy success for now */
 }
 
