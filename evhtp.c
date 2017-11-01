@@ -582,7 +582,7 @@ htp__callback_find_(evhtp_callbacks_t * cbs,
     {
         switch (callback->type) {
             case evhtp_callback_type_hash:
-                if (strncmp(callback->val.path, path, path_len) == 0)
+                if (strncmp(path, callback->val.path, callback->len) == 0) /* Bug fix 51 */
                 {
                     *start_offset = 0;
                     *end_offset   = path_len;
@@ -3766,6 +3766,7 @@ evhtp_callback_new(const char * path, evhtp_callback_type type, evhtp_callback_c
     hcb->type  = type;
     hcb->cb    = cb;
     hcb->cbarg = arg;
+    hcb->len   = strlen(path); /* Bug fix 51 */
 
     switch (type) {
         case evhtp_callback_type_hash:
