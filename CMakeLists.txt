@@ -295,7 +295,9 @@ set (LIBEVHTP_SOURCES
     evhtp.c
     evhtp_mem.c
     numtoa.c
-    parser.c)
+    parser.c
+    evhtp_net.c
+    evhtp_client.c)
 
 if (EVHTP_USE_JEMALLOC)
         set(LIBEVHTP_EXTERNAL_LIBS ${LIBEVHTP_EXTERNAL_LIBS} jemalloc)

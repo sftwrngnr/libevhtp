@@ -238,6 +238,14 @@ evhtp__new_(evhtp_t ** out, struct event_base * evbase, void * arg)
     return 0;
 }
 
+/**
+ * @brief allocate new htp structure.
+ *
+ * @param evbase event_base structure
+ * @param arg arguments for creating the htp structure
+ *
+ * @return newly allocated structure, or NULL on failure
+ */
 evhtp_t *
 evhtp_new(struct event_base * evbase, void * arg)
 {

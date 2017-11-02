@@ -13,7 +13,7 @@
 void *htp__malloc(size_t);
 void *htp__calloc(size_t, size_t);
 void htp__free(void *ptr);
-char *htp__strndup_(const char * str, size_t len);
+char *htp__strndup(const char * str, size_t len);
 char *htp__strdup(const char * str);
 
 #ifdef TEST_STATIC_FUNCS
