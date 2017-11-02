@@ -583,7 +583,7 @@ htp__callback_find_(evhtp_callbacks_t * cbs,
     {
         switch (callback->type) {
             case evhtp_callback_type_hash:
-                if (strncmp(path, callback->val.path, callback->len) == 0) /* Bug fix 51 */
+                if (strncmp(path, callback->val.path, callback->len) == 0)
                 {
                     *start_offset = 0;
                     *end_offset   = path_len;
@@ -2570,10 +2570,9 @@ htp__ssl_get_scache_ent_(evhtp_ssl_t * ssl, unsigned char * sid, int sid_len, in
     evhtp_ssl_sess_t   * sess;
 
     connection = (evhtp_connection_t * )SSL_get_app_data(ssl);
-
     if (connection->htp == NULL)
     {
-        return 0;
+        return NULL;     /* We have no way of getting ssl_cfg */
     }
     cfg        = connection->htp->ssl_cfg;
     sess       = NULL;
@@ -3756,11 +3755,11 @@ int
 evhtp_bind_socket(evhtp_t * htp, const char * baddr, uint16_t port, int backlog)
 {
 #ifndef NO_SYS_UN
-    struct sockaddr_un sockun   = { 0 };
+    struct sockaddr_un sockun = { 0 };
 #endif
     struct sockaddr   * sa;
-    struct sockaddr_in6 sin6 = { 0 };
-    struct sockaddr_in  sin  = { 0 };
+    struct sockaddr_in6 sin6  = { 0 };
+    struct sockaddr_in  sin   = { 0 };
     size_t              sin_len;
 
     if (!strncmp(baddr, "ipv6:", 5))
@@ -3782,7 +3781,7 @@ evhtp_bind_socket(evhtp_t * htp, const char * baddr, uint16_t port, int backlog)
             return -1;
         }
 
-        sin_len        = sizeof(struct sockaddr_un);
+        sin_len           = sizeof(struct sockaddr_un);
         sockun.sun_family = AF_UNIX;
 
         strncpy(sockun.sun_path, baddr, strlen(baddr));
@@ -3841,7 +3840,7 @@ evhtp_callback_new(const char * path, evhtp_callback_type type, evhtp_callback_c
     hcb->type  = type;
     hcb->cb    = cb;
     hcb->cbarg = arg;
-    hcb->len   = strlen(path); /* Bug fix 51 */
+    hcb->len   = strlen(path);
 
     switch (type) {
         case evhtp_callback_type_hash:
@@ -3873,7 +3872,7 @@ evhtp_callback_new(const char * path, evhtp_callback_type type, evhtp_callback_c
     }     /* switch */
 
     return hcb;
-} /* evhtp_callback_new */
+}         /* evhtp_callback_new */
 
 void
 evhtp_callback_free(evhtp_callback_t * callback)
@@ -3993,7 +3992,7 @@ htp__set_hook_(evhtp_hooks_t ** hooks, evhtp_hook_type type, evhtp_hook cb, void
     }     /* switch */
 
     return 0;
-} /* htp__set_hook_ */
+}         /* htp__set_hook_ */
 
 int
 evhtp_set_hook(evhtp_hooks_t ** hooks, evhtp_hook_type type, evhtp_hook cb, void * arg)
@@ -5051,7 +5050,7 @@ evhtp_connection_ssl_new(struct event_base * evbase,
     evhtp_assert(rc == 0);
 
     return conn;
-} /* evhtp_connection_ssl_new */
+}     /* evhtp_connection_ssl_new */
 
 #endif
 
